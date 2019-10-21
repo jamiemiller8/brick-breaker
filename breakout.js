@@ -78,4 +78,25 @@ function create() {
     });
 }
 
-function update() { }
+function update() {
+    // Checks if the ball left the scene which means game is over
+    if (isGameOver(this.physics.world)) {
+        // TODO: Show "Game over" message to the player
+    } else if (isWon()) {
+        // TODO: Show "You won!" message to the player
+    } else {
+        // TODO: Logic for regular game time
+    }
+}
+
+
+// Checks whether Y coordinate of the ball is greater than the height of the game world,
+// which lets the game know when the player has lost
+function isGameOver(world) {
+    return ball.body.y > world.bounds.height;
+}
+
+// Checks if the player has won by counting the amount of 'active' bricks
+function isWon() {
+    return violetBricks.countActive() + yellowBricks.countActive() + redBricks.countActive() === 0;
+}
