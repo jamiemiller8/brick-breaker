@@ -52,6 +52,7 @@ function create() {
     violetBricks = this.physics.add.group({
         key: 'brick1',
         repeat: 9, // tells how many more times to create a sprite 
+        immovable: true, // allows ball to not lose velocity when it hits a brick
         setXY: {
             x: 80,
             y: 140,
@@ -62,6 +63,7 @@ function create() {
     yellowBricks = this.physics.add.group({
         key: 'brick2',
         repeat: 9,
+        immovable: true,
         setXY: {
             x: 80,
             y: 90,
@@ -72,6 +74,7 @@ function create() {
     redBricks = this.physics.add.group({
         key: 'brick3',
         repeat: 9,
+        immovable: true,
         setXY: {
             x: 80,
             y: 40,
@@ -80,6 +83,22 @@ function create() {
     });
 
     cursors = this.input.keyboard.createCursorKeys();
+
+    //enables collision within the game scene so that ball and player paddle cannot move beyond screen
+    player.setCollideWorldBounds(true);
+    ball.setCollideWorldBounds(true);
+
+    //defines bounch property for the ball and sets how much velocity to maintain
+    // after colliding with an object
+    ball.setBounce(1,1);
+
+    //disables collision within the bottom of the game so it allows the ball to fall off screen
+    this.physics.world.checkCollision.down = false;
+
+    // tells game to execute the hitBrick function the ball collides with one of the brick groups
+    this.physics.add.collider(ball, violetBricks, hitBrick, null, this);
+    this.physics.add.collider(ball, yellowBricks, hitBrick, null, this);
+    this.physics.add.collider(ball, redBricks, hitBrick, null, this);
 }
 
 function update() {
@@ -100,7 +119,7 @@ function update() {
         // if the game hasn't started, set X-coordinate of ball to center of player
         if (!gameStarted) {
             ball.setX(player.x);
-            
+
             // if the space bar is down, it means the game has started and the ball Y-velocity is -200,
             // which sends it upwards
             if (cursors.space.isDown) {
@@ -121,4 +140,18 @@ function isGameOver(world) {
 // Checks if the player has won by counting the amount of 'active' bricks
 function isWon() {
     return violetBricks.countActive() + yellowBricks.countActive() + redBricks.countActive() === 0;
+}
+
+// if a brick is hit, make it inactive and hide it from the screen 
+function hitBrick(ball, brick) {
+    brick.disableBody(true, true);
+    // if X-velocity of ball is 0, then giev ball a velocity depening on value of random number
+    if (ball.body.velocity.x === 0) {
+        randNum = Math.random();
+        if (randNum >= 0.5) {
+            ball.body.setVelocityX(150);
+        } else {
+            ball.body.setVelocityX(-150);
+        }
+    }
 }
