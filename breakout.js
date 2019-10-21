@@ -76,6 +76,8 @@ function create() {
             stepX: 70
         }
     });
+
+    cursors = this.input.keyboard.createCursorKeys();
 }
 
 function update() {
@@ -85,7 +87,14 @@ function update() {
     } else if (isWon()) {
         // TODO: Show "You won!" message to the player
     } else {
-        // TODO: Logic for regular game time
+        //player stays still if no key is being pressed
+        player.body.setVelocityX(0);
+
+        if (cursors.left.isDown) {
+            player.body.setVelocityX(-350);
+        } else if (cursors.right.isDown) {
+            player.body.setVelocityX(350);
+        }
     }
 }
 
