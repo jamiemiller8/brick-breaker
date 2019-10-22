@@ -20,7 +20,8 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: false 
+            gravity: false, 
+            debug: true //allows me to see sprites' boundary boxes/outlines 
         },
     }
 };
@@ -99,6 +100,11 @@ function create() {
     this.physics.add.collider(ball, violetBricks, hitBrick, null, this);
     this.physics.add.collider(ball, yellowBricks, hitBrick, null, this);
     this.physics.add.collider(ball, redBricks, hitBrick, null, this);
+
+    //manages collisions between the player paddle and the ball
+    player.setImmovable(true);
+
+    this.physics.add.collider(ball, player, hitPlayer, null, this);
 }
 
 function update() {
@@ -153,5 +159,20 @@ function hitBrick(ball, brick) {
         } else {
             ball.body.setVelocityX(-150);
         }
+    }
+}
+
+// when the ball hits the player paddle, the ball should move a bit faster and also dealing
+// with horizontal angles depending on which side of the paddle the ball hits
+function hitPlayer(ball, player) {
+    // increase the velocity of the ball after it bounces
+    ball.setVelocityY(ball.body.velocity.y - 5);
+
+    let newXVelocity = Math.abs(ball.body.velocity.x) + 5;
+    // if the ball is to the left of the player, ensure the X-velocity is negative
+    if (ball.x < player.x) {
+        ball.setVelocityX(-newXVelocity);
+    } else {
+        ball.setVelocityX(newXVelocity);
     }
 }
