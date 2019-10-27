@@ -2,6 +2,8 @@ let player, ball, violetBricks, yellowBricks, redBricks, cursors;
 
 let gameStarted = false;
 
+let openingText, gameOverText, playerWonText;
+
 //Phaser.js configurations 
 const config = {
     type: Phaser.AUTO,
@@ -105,6 +107,19 @@ function create() {
     player.setImmovable(true);
 
     this.physics.add.collider(ball, player, hitPlayer, null, this);
+
+    //shows text to tell player how to start game
+    openingText = this.add.text(
+        this.physics.world.bounds.width / 2,
+        this.physics.world.bounds.height / 2,
+        'Press SPACE to start game',
+        {
+            fontFamily: 'Monaco, Courier, monospace',
+            fontSize: '50px',
+            fill: '#fff'
+        }
+    );
+    openingText.setOrigin(0.5);
 }
 
 function update() {
