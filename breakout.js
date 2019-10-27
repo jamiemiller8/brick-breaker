@@ -146,6 +146,7 @@ function update() {
             if (cursors.space.isDown) {
                 gameStarted = true;
                 ball.setVelocityY(-200);
+                openingText.setVisible(false); // start message disappears when spacebar is pressed
             }
         }
     }
